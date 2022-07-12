@@ -4,12 +4,35 @@ import 'package:mm_hamburgueria/app/models/product_model.dart';
 import 'package:mm_hamburgueria/app/modules/home/widgets/actions_appbar.dart';
 import 'package:mm_hamburgueria/app/modules/home/widgets/popular_burguer_card.dart';
 import 'package:mm_hamburgueria/app/modules/home/widgets/special_burguer_card.dart';
+import 'package:mm_hamburgueria/app/modules/products/controller/cart_controller.dart';
+import 'package:mm_hamburgueria/repository/cart/cart_repository.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  final CartController _cartController;
+  final CartRepository _cartRepository;
+  HomePage({Key? key, required cartController, required cartRepository})
+      : _cartController = cartController,
+        _cartRepository = cartRepository,
+        super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+
   List specialProducts = Constants.specialProducts;
+
   List popularBurguers = Constants.popularBurguers;
+  @override
+  void initState() {
+    super.initState();
+    widget._cartRepository
+        .getCartList()
+        .then((value) => widget._cartController.cartList = value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,7 +47,7 @@ class HomePage extends StatelessWidget {
               onPressed: () => scaffoldKey.currentState?.openDrawer(),
             ),
           ),
-          actions: const [ActionsAppbar()],
+          actions: [ActionsAppbar(items: widget._cartController.cartList.length,)],
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
@@ -43,8 +66,8 @@ class HomePage extends StatelessWidget {
                     SizedBox(width: 6),
                     Text(
                       'Specials',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 25),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                     )
                   ],
                 ),
@@ -58,12 +81,12 @@ class HomePage extends StatelessWidget {
                     itemCount: specialProducts.length,
                     itemBuilder: (context, index) {
                       final product = ProductModel(
-                          name: specialProducts[index]['name'],
-                          description: specialProducts[index]['description'],
-                          price: specialProducts[index]['price'],
-                          image: specialProducts[index]['image'],
-                          ingredients: specialProducts[index]['ingredients'],
-                        );
+                        name: specialProducts[index]['name'],
+                        description: specialProducts[index]['description'],
+                        price: specialProducts[index]['price'],
+                        image: specialProducts[index]['image'],
+                        ingredients: specialProducts[index]['ingredients'],
+                      );
                       return SpecialBurguerCard(product: product);
                     },
                   ),

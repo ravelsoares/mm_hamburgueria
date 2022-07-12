@@ -6,7 +6,7 @@ class ProductModule extends Module {
   List<ModularRoute> get routes => [
         ChildRoute('/', child: (context, args) {
           final product = args.data;
-          return ProductPage(product: product);
+          return ProductPage(product: product, cartController: Modular.get(),);
         })
       ];
 }

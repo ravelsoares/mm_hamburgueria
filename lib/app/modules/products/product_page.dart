@@ -2,11 +2,22 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mm_hamburgueria/app/models/product_model.dart';
+import 'package:mm_hamburgueria/app/modules/products/controller/cart_controller.dart';
 import 'package:mm_hamburgueria/app/modules/products/widgets/ingredient_tile.dart';
+import 'package:mm_hamburgueria/repository/cart/cart_repository.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
+  final CartController cartController;
   final ProductModel product;
-  const ProductPage({Key? key, required this.product}) : super(key: key);
+  const ProductPage({Key? key, required this.product, required this.cartController}) : super(key: key);
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +38,7 @@ class ProductPage extends StatelessWidget {
                           child: CircularProgressIndicator(
                               value: progress.progress),
                         ),
-                        imageUrl: product.image,
+                        imageUrl: widget.product.image,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -72,7 +83,7 @@ class ProductPage extends StatelessWidget {
                                     child: Wrap(
                                       children: [
                                         AutoSizeText(
-                                          product.name,
+                                          widget.product.name,
                                           style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
@@ -82,7 +93,7 @@ class ProductPage extends StatelessWidget {
                                     ),
                                   ),
                                   AutoSizeText(
-                                      'R\$ ${product.price.toStringAsFixed(2)}',
+                                      'R\$ ${widget.product.price.toStringAsFixed(2)}',
                                       style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold)),
@@ -96,7 +107,7 @@ class ProductPage extends StatelessWidget {
                                     MediaQuery.of(context).size.height * 0.12,
                                 child: Wrap(children: [
                                   AutoSizeText(
-                                    product.description,
+                                    widget.product.description,
                                     maxFontSize: 25,
                                     minFontSize: 15,
                                   ),
@@ -104,29 +115,29 @@ class ProductPage extends StatelessWidget {
                               ),
                               SizedBox(
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   child: Wrap(
-                                    children: product.ingredients
+                                    children: widget.product.ingredients
                                         .map((e) => SizedBox(
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
                                                 0.3,
-                                            child: IngredientTile(ingredient: e)))
+                                            child:
+                                                IngredientTile(ingredient: e)))
                                         .toList(),
                                   ),
                                 ),
                               ),
-                             const SizedBox(
+                              const SizedBox(
                                 height: 15,
-                             ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: Row(
                                   children: [
                                     Container(
-                                      //height: MediaQuery.of(context).size.height * 0.04,
-                                      //width: MediaQuery.of(context).size.width * 0.13,
                                       height: 50,
                                       width: 50,
                                       decoration: BoxDecoration(
@@ -136,18 +147,21 @@ class ProductPage extends StatelessWidget {
                                               BorderRadius.circular(20)),
                                       child: Center(
                                         child: SizedBox(
-                                          child: Image.network(
-                                            'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/OOjs_UI_icon_heart.svg/1200px-OOjs_UI_icon_heart.svg.png',
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.03,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.06,
-                                            color:
-                                                const Color.fromARGB(255, 247, 181, 0),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              setState(
+                                                () {
+                                                  isFavorite = !isFavorite;
+                                                },
+                                              );
+                                            },
+                                            icon: Icon(
+                                              isFavorite
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_border,
+                                              color: const Color.fromARGB(
+                                                  255, 247, 181, 0),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -161,7 +175,9 @@ class ProductPage extends StatelessWidget {
                                         //height: MediaQuery.of(context).size.height * 0.04,
                                         height: 50,
                                         child: ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            widget.cartController.saveProductInCart(widget.product);
+                                          },
                                           style: ButtonStyle(
                                             shape: MaterialStateProperty.all(
                                               RoundedRectangleBorder(
@@ -171,13 +187,15 @@ class ProductPage extends StatelessWidget {
                                             ),
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                              const Color.fromARGB(255, 247, 181, 0),
+                                              const Color.fromARGB(
+                                                  255, 247, 181, 0),
                                             ),
                                           ),
                                           child: const Text('Add to Cart'),
                                         ),
                                       ),
                                     ),
+                                    const SizedBox(height: 10),
                                   ],
                                 ),
                               ),

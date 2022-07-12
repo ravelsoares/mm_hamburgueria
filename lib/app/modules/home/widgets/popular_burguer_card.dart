@@ -99,7 +99,9 @@ class PopularBurguerCard extends StatelessWidget {
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.045,
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                
+              },
               child: const CircleAvatar(
                 backgroundColor: Color.fromARGB(255, 247, 181, 0),
                 child: Center(
