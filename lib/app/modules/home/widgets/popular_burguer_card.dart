@@ -2,11 +2,17 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mm_hamburgueria/app/models/cart_model.dart';
 import 'package:mm_hamburgueria/app/models/product_model.dart';
 
 class PopularBurguerCard extends StatelessWidget {
   final ProductModel product;
-  const PopularBurguerCard({Key? key, required this.product}) : super(key: key);
+  final Function(ProductModel) onTap;
+  const PopularBurguerCard(
+      {Key? key,
+      required this.product,
+      required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +106,9 @@ class PopularBurguerCard extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.045,
             child: InkWell(
               onTap: () {
-                
+                final cart = CartModel(
+                    name: product.name, price: product.price, quantity: 1);
+                onTap(product);
               },
               child: const CircleAvatar(
                 backgroundColor: Color.fromARGB(255, 247, 181, 0),

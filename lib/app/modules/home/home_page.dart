@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mm_hamburgueria/app/core/constants.dart';
+import 'package:mm_hamburgueria/app/models/cart_model.dart';
 import 'package:mm_hamburgueria/app/models/product_model.dart';
 import 'package:mm_hamburgueria/app/modules/home/widgets/actions_appbar.dart';
 import 'package:mm_hamburgueria/app/modules/home/widgets/popular_burguer_card.dart';
 import 'package:mm_hamburgueria/app/modules/home/widgets/special_burguer_card.dart';
 import 'package:mm_hamburgueria/app/modules/products/controller/cart_controller.dart';
-import 'package:mm_hamburgueria/repository/cart/cart_repository.dart';
+import '../../repository/cart/cart_repository.dart';
 
 class HomePage extends StatefulWidget {
-  final CartController _cartController;
   final CartRepository _cartRepository;
-  HomePage({Key? key, required cartController, required cartRepository})
-      : _cartController = cartController,
-        _cartRepository = cartRepository,
+  final CartController controller;
+  HomePage(
+      {Key? key,
+      required CartRepository cartRepository,
+      required this.controller})
+      : _cartRepository = cartRepository,
         super(key: key);
 
   @override
@@ -28,9 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    widget._cartRepository
-        .getCartList()
-        .then((value) => widget._cartController.cartList = value);
+    widget.controller.getCartList();
   }
 
   @override
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => scaffoldKey.currentState?.openDrawer(),
             ),
           ),
-          actions: [ActionsAppbar(items: widget._cartController.cartList.length,)],
+          actions: [ActionsAppbar(bloc: widget.controller)],
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
@@ -115,7 +116,11 @@ class _HomePageState extends State<HomePage> {
                           image: popularBurguers[index]['image'],
                           ingredients: popularBurguers[index]['ingredients'],
                         );
-                        return PopularBurguerCard(product: product);
+
+                        return PopularBurguerCard(
+                          product: product,
+                          onTap: widget.controller.saveProductInCart,
+                        );
                       }),
                 ),
                 const SizedBox(height: 10)

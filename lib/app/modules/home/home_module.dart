@@ -4,11 +4,8 @@ import 'package:mm_hamburgueria/app/modules/products/controller/cart_controller.
 
 class HomeModule extends Module{
   @override
-  List<Bind<Object>> get binds => [
-    Bind.lazySingleton<CartController>((i) => CartController(cartRepository: Modular.get()))
-  ];
-  @override
+  List<Bind<Object>> get binds => [];
   List<ModularRoute> get routes => [
-    ChildRoute('/', child: (context, args) => HomePage(cartController: Modular.get(), cartRepository: Modular.get(),))
+    ChildRoute('/', child: (context, args) => HomePage(cartRepository: Modular.get(), controller: Modular.get<CartController>(),))
   ];
 }

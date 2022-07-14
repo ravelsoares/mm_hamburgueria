@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:mm_hamburgueria/app/models/product_model.dart';
 import 'package:mm_hamburgueria/app/modules/products/controller/cart_controller.dart';
 import 'package:mm_hamburgueria/app/modules/products/widgets/ingredient_tile.dart';
-import 'package:mm_hamburgueria/repository/cart/cart_repository.dart';
+
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
+import '../../repository/cart/cart_repository.dart';
+
 class ProductPage extends StatefulWidget {
-  final CartController cartController;
+  final CartRepository _cartRepository;
   final ProductModel product;
-  const ProductPage({Key? key, required this.product, required this.cartController}) : super(key: key);
+  const ProductPage(
+      {Key? key, required this.product, required cartRepository})
+      : _cartRepository = cartRepository, super(key: key);
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -176,7 +180,7 @@ class _ProductPageState extends State<ProductPage> {
                                         height: 50,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            widget.cartController.saveProductInCart(widget.product);
+                                            
                                           },
                                           style: ButtonStyle(
                                             shape: MaterialStateProperty.all(

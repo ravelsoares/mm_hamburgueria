@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mm_hamburgueria/app/modules/products/controller/cart_controller.dart';
 
 class ActionsAppbar extends StatelessWidget {
-  final int items;
-  const ActionsAppbar({Key? key, required this.items}) : super(key: key);
+  final CartController bloc;
+  const ActionsAppbar({Key? key, required this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,24 @@ class ActionsAppbar extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 247, 181, 0),
                         borderRadius: BorderRadius.circular(10)),
-                    child: Center(child: Text(items.toString())),
+                    child: BlocBuilder<CartController, CartStatus>(
+                      buildWhen: (((previous, current) => previous != current)),
+                      bloc: bloc,
+                      builder: ((context, state) {
+                        switch (state) {
+                          case CartStatus.loading:
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          case CartStatus.sucess:
+                            return Center(
+                                child: Text(bloc.cartList.length.toString()));
+                          default:
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                        }
+                      }),
+                    ),
                   ),
                 ],
               ),
