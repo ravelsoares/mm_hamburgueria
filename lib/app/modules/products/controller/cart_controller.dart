@@ -9,7 +9,7 @@ class CartController extends Cubit<CartStatus> {
   final CartRepository cartRepository;
   CartController({
     required this.cartRepository,
-  }) : super(CartStatus.sucess) {
+  }) : super(CartStatus.initial) {
     cartRepository.getCartList().then((value) => cartList = value);
   }
 
@@ -25,7 +25,7 @@ class CartController extends Cubit<CartStatus> {
   Future<List<CartModel>> getCartList() async {
     emit(CartStatus.loading);
     cartList = await cartRepository.getCartList();
-    emit(CartStatus.sucess);
+    emit(CartStatus.initial);
     return cartList;
   }
 }

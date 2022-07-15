@@ -1,10 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class IngredientTile extends StatelessWidget {
+class IngredientTile extends StatefulWidget {
   final String ingredient;
   const IngredientTile({Key? key, required this.ingredient}) : super(key: key);
 
+  @override
+  State<IngredientTile> createState() => _IngredientTileState();
+}
+
+class _IngredientTileState extends State<IngredientTile> {
+  bool onClicked = false;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -25,7 +31,7 @@ class IngredientTile extends StatelessWidget {
                   child: Wrap(
                     children: [
                       AutoSizeText(
-                        ingredient,
+                        widget.ingredient,
                         minFontSize: 8,
                         maxFontSize: 10,
                         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -36,10 +42,13 @@ class IngredientTile extends StatelessWidget {
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
-                child: const CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 247, 181, 0),
-                  child: Center(
-                    child: Icon(Icons.check, color: Colors.white),
+                child: InkWell(
+                  onTap: () => setState((){onClicked = !onClicked;}),
+                  child: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 247, 181, 0),
+                    child: Center(
+                      child: Icon(!onClicked ? Icons.check : Icons.add, color: Colors.white),
+                    ),
                   ),
                 ),
               ),

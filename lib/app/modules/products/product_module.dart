@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mm_hamburgueria/app/modules/products/controller/cart_controller.dart';
 import 'package:mm_hamburgueria/app/modules/products/product_page.dart';
 
 class ProductModule extends Module {
@@ -6,7 +7,8 @@ class ProductModule extends Module {
   List<ModularRoute> get routes => [
         ChildRoute('/', child: (context, args) {
           final product = args.data;
-          return ProductPage(product: product, cartRepository: Modular.get(),);
+          return ProductPage(
+              product: product, controller: Modular.get<CartController>());
         })
       ];
 }

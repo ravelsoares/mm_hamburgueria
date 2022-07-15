@@ -6,6 +6,6 @@ class HomeModule extends Module{
   @override
   List<Bind<Object>> get binds => [];
   List<ModularRoute> get routes => [
-    ChildRoute('/', child: (context, args) => HomePage(cartRepository: Modular.get(), controller: Modular.get<CartController>(),))
+    ChildRoute('/', child: (context, args) => HomePage(controller: Modular.get<CartController>(),))
   ];
 }

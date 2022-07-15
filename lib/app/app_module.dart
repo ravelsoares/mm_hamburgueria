@@ -15,7 +15,7 @@ class AppModule extends Module{
   ];
   @override
   List<ModularRoute> get routes => [
-    ChildRoute('/', child: (context, args) => HomePage(cartRepository: Modular.get<CartRepository>(), controller: Modular.get<CartController>(),)),
+    ChildRoute('/', child: (context, args) => HomePage(controller: Modular.get<CartController>(),)),
     ModuleRoute('/home', module: HomeModule()),
     ModuleRoute('/product', module: ProductModule()),
   ];

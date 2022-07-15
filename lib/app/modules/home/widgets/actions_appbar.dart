@@ -78,6 +78,8 @@ class ActionsAppbar extends StatelessWidget {
                           case CartStatus.sucess:
                             return Center(
                                 child: Text(bloc.cartList.length.toString()));
+                          case CartStatus.initial:
+                            return Center(child: Text(bloc.cartList.length.toString()),);
                           default:
                             return const Center(
                               child: CircularProgressIndicator(),
