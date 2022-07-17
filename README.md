@@ -8,3 +8,4 @@ Esse projeto foi desenvolvido para simular um aplicativo de uma Hamburgueria. O 
 
 
 ## Resultado
+<img src="ezgif.com-gif-maker.gif">
